@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Interaktif ASTS PJOK Kelas 9</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        display: ['Fredoka', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            blue: '#2563eb',
+                            purple: '#7c3aed',
+                            emerald: '#059669',
+                            orange: '#ea580c',
+                            pink: '#db2777',
+                            yellow: '#d97706'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+            background-color: #f0fdf4;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+    </style>
+</head>
+<body class="min-h-screen font-sans text-slate-800 flex flex-col justify-between" oncontextmenu="return false;">
+
+    <!-- Top Bar -->
+    <header class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white/20 p-2 rounded-xl backdrop-blur-md">
+                    <i class="fa-solid fa-trophy text-yellow-300 text-xl sm:text-2xl animate-bounce"></i>
+                </div>
+                <div>
+                    <h1 class="font-display font-bold text-lg sm:text-xl leading-tight">ASTS PJOK KELAS 9</h1>
+                    <p class="text-xs text-blue-100 hidden sm:block">Arena Olahraga & Keleluasaan Gerak Interaktif</p>
+                </div>
+            </div>
+
+            <!-- Quiz Timer & Violations Counter -->
+            <div id="quizHeaderInfo" class="hidden flex items-center space-x-3 sm:space-x-4">
+                <div class="bg-white/10 px-3 py-1.5 rounded-xl border border-white/20 flex items-center space-x-2">
+                    <i class="fa-solid fa-clock text-amber-300 text-sm"></i>
+                    <span id="timerDisplay" class="font-mono font-bold text-sm sm:text-base">75:00</span>
+                </div>
+                <div class="bg-red-500/30 px-3 py-1.5 rounded-xl border border-red-300/40 flex items-center space-x-2">
+                    <i class="fa-solid fa-triangle-exclamation text-red-300 text-sm"></i>
+                    <span id="cheatDisplay" class="text-xs font-semibold">Pelanggaran: <span id="cheatCount">0</span>/3</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full">
+
+        <!-- 1. ENTRY SCREEN (NAME, CLASS, PASSCODE) -->
+        <section id="screenEntry" class="max-w-lg mx-auto bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden transition-all duration-300">
+            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 p-6 text-white text-center relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+                <i class="fa-solid fa-volleyball text-5xl mb-2 opacity-90"></i>
+                <h2 class="font-display text-2xl font-bold">Selamat Datang Atlit PJOK!</h2>
+                <p class="text-sm text-blue-100 mt-1">Isi identitas untuk memulai tantangan asesmen</p>
+            </div>
+
+            <form id="formStart" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                        <i class="fa-solid fa-user text-blue-500 mr-1"></i> Nama Lengkap Siswa
+                    </label>
+                    <input type="text" id="inputNama" required placeholder="Contoh: Muhammad Rizky" 
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition font-medium">
+                    <input type="url" id="inputGasUrl" 
+    value="https://script.google.com/macros/s/AKfycbxvj96GW8tcyULqoeC2SHLYve388btbVelgzybd4n7NfzA_iLenxDb5ecOE9XdnCd6O/exec"
+    placeholder="https://script.google.com/macros/s/.../exec"
+    class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs font-mono">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                        <i class="fa-solid fa-graduation-cap text-purple-500 mr-1"></i> Kelas
+                    </label>
+                    <select id="selectKelas" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition font-medium">
+                        <option value="">-- Pilih Kelas --</option>
+                        <option value="9A">Kelas 9A</option>
+                        <option value="9B">Kelas 9B</option>
+                        <option value="9C">Kelas 9C</option>
+                        <option value="9D">Kelas 9D</option>
+                        <option value="9E">Kelas 9E</option>
+                        <option value="9F">Kelas 9F</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                        <i class="fa-solid fa-key text-amber-500 mr-1"></i> Passcode Masuk Game
+                    </label>
+                    <input type="password" id="inputPasscode" required placeholder="Masukkan Passcode (Default: PJOK9)" 
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition font-medium">
+                    <p class="text-[11px] text-slate-400 mt-1">* Minta passcode kepada Guru Pengampu PJOK.</p>
+                </div>
+
+                <!-- Web App Script URL optional configuration -->
+                <div class="pt-2 border-t border-slate-100">
+                    <button type="button" onclick="toggleScriptConfig()" class="text-xs text-blue-600 hover:underline flex items-center gap-1 font-semibold">
+                        <i class="fa-solid fa-gear"></i> Pengaturan Google Apps Script (Opsional Guru)
+                    </button>
+                    <div id="scriptConfigArea" class="hidden mt-2 p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
+                        <label class="block font-bold text-slate-700 mb-1">Google Apps Script Web App URL:</label>
+                        <input type="url" id="inputGasUrl" placeholder="https://script.google.com/macros/s/.../exec"
+                            class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs font-mono">
+                        <p class="text-[10px] text-slate-500 mt-1">Kosongkan jika tidak menggunakan integrasi otomatis Google Sheet.</p>
+                    </div>
+                </div>
+
+                <div class="pt-3">
+                    <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-display font-bold rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 transition transform duration-200 flex items-center justify-center space-x-2 text-lg">
+                        <i class="fa-solid fa-gamepad"></i>
+                        <span>Mulai Game Asesmen</span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- 2. QUIZ SCREEN -->
+        <section id="screenQuiz" class="hidden space-y-6">
+            
+            <!-- Question Header Card -->
+            <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="flex items-center space-x-3">
+                    <span id="questionBadge" class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-display font-bold text-xl flex items-center justify-center shadow-md">
+                        1
+                    </span>
+                    <div>
+                        <span id="studentTag" class="text-xs font-bold text-indigo-600 uppercase tracking-wide">Siswa: -</span>
+                        <h3 id="questionProgressText" class="text-slate-800 font-bold text-sm sm:text-base">Soal 1 dari 50</h3>
+                    </div>
+                </div>
+
+                <!-- Navigation grid toggle button for mobile -->
+                <div class="flex items-center space-x-2">
+                    <button onclick="toggleMapModal()" class="px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl font-bold text-xs flex items-center space-x-2 transition">
+                        <i class="fa-solid fa-border-all"></i>
+                        <span>Peta Soal (1-50)</span>
+                    </button>
+                    <button onclick="toggleTeacherImageModal()" class="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-xl font-bold text-xs flex items-center space-x-1 transition" title="Sisipkan/Ubah Image URL Soal">
+                        <i class="fa-solid fa-image"></i>
+                        <span class="hidden sm:inline">Set Image URL</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Question & Options Card -->
+            <div class="bg-white rounded-3xl shadow-lg border border-slate-100 p-6 sm:p-8 relative overflow-hidden">
+                <!-- Question Text -->
+                <div id="questionContainer" class="space-y-4">
+                    <h2 id="questionText" class="text-slate-800 font-semibold text-base sm:text-lg leading-relaxed">
+                        Loading soal...
+                    </h2>
+
+                    <!-- Optional Image Attachment Area -->
+                    <div id="questionImageArea" class="hidden my-4 p-2 bg-slate-50 border border-slate-200 rounded-2xl text-center max-w-lg mx-auto">
+                        <img id="questionImg" src="" alt="Gambar Soal" class="max-h-64 mx-auto rounded-xl object-contain shadow-sm" onerror="handleImageError(this)">
+                        <p id="imageCaption" class="text-xs text-slate-400 mt-1 italic">Ilustrasi / Gambar Soal PJOK</p>
+                    </div>
+
+                    <!-- Answer Options -->
+                    <div id="optionsContainer" class="grid grid-cols-1 gap-3 pt-4">
+                        <!-- Options injected dynamically -->
+                    </div>
+                </div>
+
+                <!-- Bottom Action Controls -->
+                <div class="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between flex-wrap gap-4">
+                    <button id="btnPrev" onclick="navigateQuestion(-1)" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-sm transition flex items-center space-x-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Sebelumnya</span>
+                    </button>
+
+                    <div class="flex items-center space-x-2">
+                        <button id="btnFlag" onclick="toggleFlagCurrentQuestion()" class="px-4 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-xl font-bold text-xs transition flex items-center space-x-1 border border-amber-200">
+                            <i id="flagIcon" class="fa-regular fa-bookmark"></i>
+                            <span id="flagText">Tandai Ragu</span>
+                        </button>
+
+                        <button id="btnNext" onclick="navigateQuestion(1)" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm shadow-md transition flex items-center space-x-2">
+                            <span>Selanjutnya</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+
+                        <button id="btnSubmitQuiz" onclick="confirmFinishQuiz()" class="hidden px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl font-bold text-sm shadow-md transition flex items-center space-x-2 animate-pulse">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Selesaikan & Kirim</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. SCORE & RESULT SCREEN -->
+        <section id="screenResult" class="hidden space-y-6 max-w-4xl mx-auto">
+            <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden p-6 sm:p-10 text-center relative">
+                <div class="inline-block p-4 bg-yellow-100 rounded-full mb-3">
+                    <i class="fa-solid fa-award text-yellow-600 text-5xl"></i>
+                </div>
+                <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-800">Asesmen Selesai!</h2>
+                <p class="text-slate-500 text-sm mt-1">Berikut adalah ringkasan hasil pengerjaan Anda</p>
+
+                <!-- Student Metadata Badge -->
+                <div class="mt-4 inline-flex items-center space-x-4 bg-slate-50 px-4 py-2 rounded-2xl border border-slate-200 text-xs font-semibold text-slate-700">
+                    <span><i class="fa-solid fa-user text-blue-500 mr-1"></i> <span id="resNama">-</span></span>
+                    <span>•</span>
+                    <span><i class="fa-solid fa-graduation-cap text-purple-500 mr-1"></i> <span id="resKelas">-</span></span>
+                </div>
+
+                <!-- Score Cards Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-8">
+                    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 p-5 rounded-2xl">
+                        <p class="text-xs font-bold text-blue-600 uppercase">Skor Akhir</p>
+                        <p id="resSkor" class="font-display font-extrabold text-4xl text-blue-700 mt-1">0</p>
+                        <p class="text-[11px] text-blue-500 mt-1">Skala 0 - 100</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 p-5 rounded-2xl">
+                        <p class="text-xs font-bold text-emerald-600 uppercase">Jawaban Benar</p>
+                        <p id="resBenar" class="font-display font-extrabold text-4xl text-emerald-700 mt-1">0</p>
+                        <p class="text-[11px] text-emerald-500 mt-1">Dari 50 Soal</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-rose-50 to-pink-50 border border-rose-200 p-5 rounded-2xl">
+                        <p class="text-xs font-bold text-rose-600 uppercase">Jawaban Salah</p>
+                        <p id="resSalah" class="font-display font-extrabold text-4xl text-rose-700 mt-1">0</p>
+                        <p class="text-[11px] text-rose-500 mt-1">Dari 50 Soal</p>
+                    </div>
+                </div>
+
+                <!-- Sending Status Alert -->
+                <div id="gasStatusAlert" class="hidden p-4 rounded-2xl text-xs font-bold text-center mb-6"></div>
+
+                <!-- Review & Reset Buttons -->
+                <div class="flex flex-wrap items-center justify-center gap-3">
+                    <button onclick="toggleReviewModal()" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-sm shadow-md transition flex items-center space-x-2">
+                        <i class="fa-solid fa-list-check"></i>
+                        <span>Lihat Pembahasan & Review Soal</span>
+                    </button>
+                    <button onclick="restartApp()" class="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-sm transition flex items-center space-x-2">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        <span>Selesai / Keluar</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL 1: QUESTION MAP (PETA SOAL) -->
+    <div id="modalMap" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-6 space-y-4 max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 class="font-display font-bold text-lg text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-grid-2 text-blue-600"></i> Peta Navigasi Soal (1 - 50)
+                </h3>
+                <button onclick="toggleMapModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="flex items-center justify-center space-x-4 text-xs font-bold py-1">
+                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-600 inline-block"></span> Sudah Diisi</span>
+                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400 inline-block"></span> Ragu-ragu</span>
+                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-slate-200 inline-block"></span> Belum Diisi</span>
+            </div>
+
+            <!-- Grid 1-50 -->
+            <div id="gridQuestionMap" class="grid grid-cols-5 sm:grid-cols-10 gap-2 overflow-y-auto p-2 custom-scrollbar flex-grow">
+                <!-- Dynamically injected -->
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex justify-end">
+                <button onclick="toggleMapModal()" class="px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold text-xs">
+                    Tutup Peta
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: TEACHER IMAGE SETUP -->
+    <div id="modalTeacherImage" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 class="font-display font-bold text-base text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-image text-amber-500"></i> Disisipkan Image URL Soal
+                </h3>
+                <button onclick="toggleTeacherImageModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <p class="text-xs text-slate-500">
+                Masukkan URL gambar (JPG/PNG/SVG) untuk **Soal Nomor <span id="currentImgSoalNum">1</span>**.
+            </p>
+
+            <div>
+                <input type="url" id="inputCustomImgUrl" placeholder="https://example.com/gambar-soal.png" 
+                    class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs font-mono focus:ring-2 focus:ring-amber-200 outline-none">
+            </div>
+
+            <div class="flex items-center justify-end space-x-2 pt-2">
+                <button onclick="clearCurrentImageUrl()" class="px-3 py-2 bg-rose-50 text-rose-600 rounded-xl font-bold text-xs">
+                    Hapus Gambar
+                </button>
+                <button onclick="saveCurrentImageUrl()" class="px-4 py-2 bg-amber-500 text-white rounded-xl font-bold text-xs shadow">
+                    Simpan Gambar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: ANSWERS REVIEW -->
+    <div id="modalReview" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full p-6 space-y-4 max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 class="font-display font-bold text-lg text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-square-check text-emerald-600"></i> Review Jawaban & Kunci Soal
+                </h3>
+                <button onclick="toggleReviewModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="reviewContainer" class="overflow-y-auto space-y-4 p-2 custom-scrollbar flex-grow">
+                <!-- Dynamically injected -->
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex justify-end">
+                <button onclick="toggleReviewModal()" class="px-5 py-2.5 bg-slate-800 text-white rounded-xl font-bold text-xs">
+                    Tutup Pembahasan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
+        <p>Game Interaktif Asesmen PJOK SMP • ASTS Kelas 9</p>
+    </footer>
+
+    <script>
+        /* PASSCODE CONFIGURATION */
+        const DEFAULT_PASSCODE = "PJOK9";
+
+        /* APP STATE */
+        let studentData = {
+            nama: "",
+            kelas: "",
+            passcode: "",
+            score: 0,
+            correctCount: 0,
+            wrongCount: 0
+        };
+
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(50).fill(null); // stores option index (0,1,2,3)
+        let flaggedQuestions = new Array(50).fill(false);
+        let violationsCount = 0;
+        let maxViolations = 3;
+        let timerInterval = null;
+        let timeLeft = 75 * 60; // 75 minutes in seconds
+        let gasWebUrl = "https://script.google.com/macros/s/AKfycbxvj96GW8tcyULqoeC2SHLYve388btbVelgzybd4n7NfzA_iLenxDb5ecOE9XdnCd6O/exec";
+
+        /* 50 QUESTIONS DATASET (ASTS PJOK KELAS 9) */
+        const questionsData = [
+            {
+                q: "1. Andi bermain sepak bola di lapangan. Ia menggiring bola sambil menghindari lawan. Kemudian, ia menendang bola ke gawang. Aktivitas tersebut menunjukkan......",
+                options: ["a) gerak pasif", "b) gerak statis", "c) rangkaian gerak", "d) kombinasi gerak"],
+                key: 2, // c)
+                img: ""
+            },
+            {
+                q: "2. Beni berlatih lompat hurdle di sekolah. Ia berlari lalu melompati rintangan. Setelah itu ia kembali berlari menuju garis akhir. Fungsi utama gerakan tersebut adalah...",
+                options: ["a) melatih kekuatan diam", "b) mengurangi aktivitas fisik", "c) meningkatkan variasi gerak", "d) memperindah gerakan tubuh"],
+                key: 2, // c)
+                img: ""
+            },
+            {
+                q: "3. Rika bermain kasti bersama teman-temannya. Ia berlari cepat menuju base setelah memukul bola. Saat berlari, Rika menghindari sentuhan lawan. Gerakan Rika paling tepat disebut....",
+                options: ["a) gerak tunggal tanpa variasi", "b) kombinasi gerak situasional", "c) gerak statis tanpa perpindahan", "d) rangkaian gerak berurutan tetap"],
+                key: 1, // b)
+                img: ""
+            },
+            {
+                q: "4. Dodi berlari di lapangan luas. Ia melompat menghindari rintangan. Setelah itu ia terus berlari. Tujuan utama gerakan tersebut adalah....",
+                options: ["a) mengurangi energi tubuh", "b) meningkatkan kelincahan", "c) memperlambat gerak", "d) menghindari aktivitas"],
+                key: 1, // b)
+                img: ""
+            },
+            {
+                q: "5. Salsa melakukan latihan guling depan. Ia mulai dari berdiri lalu membungkuk. Kemudian ia menggulingkan tubuh ke depan. Jika urutan salah, maka....",
+                options: ["a) gerak lebih kuat", "b) gerak lebih cepat", "c) gerak tidak efektif", "d) gerak lebih mudah"],
+                key: 2, // c)
+                img: ""
+            },
+            {
+                q: "6. Rafi berlatih lompat jauh di lapangan. Ia langsung melompat tanpa awalan lari. Akibatnya jarak lompatannya pendek. Kesalahan utama Rafi adalah....",
+                options: ["a) tidak menggunakan awalan lari", "b) posisi tangan terlalu lurus", "c) melompat terlalu tinggi", "d) mendarat terlalu cepat"],
+                key: 0, // a)
+                img: ""
+            },
+            {
+                q: "7. Sinta bermain bulu tangkis di lapangan. Ia sering terlambat memukul shuttlecock. Ia jarang bergerak ke posisi yang tepat. Sinta seharusnya menggunakan strategi....",
+                options: ["a) berdiri di satu posisi", "b) mengurangi pukulan", "c) diam menunggu bola", "d) meningkatkan pergerakan kaki"],
+                key: 3, // d)
+                img: ""
+            },
+            {
+                q: "8. Perhatikan ilustrasi permainan olahraga berikut:\nKeberhasilan gerakan tersebut dipengaruhi....",
+                options: ["a) gerakan acak", "b) posisi diam lama", "c) kecepatan tanpa kontrol", "d) koordinasi rangkaian gerak"],
+                key: 3, // d)
+                img: "https://uploads.onecompiler.io/453dejs4x/1789603910329/WhatsApp%20Image%202026-09-14%20at%2010.36.24.jpeg"
+            },
+            {
+                q: "9. Lisa melakukan senam lantai di kelas. Ia melakukan guling depan tanpa membungkuk. Gerakannya terlihat kaku dan tidak sempurna. Evaluasi gerakan Lina adalah....",
+                options: ["a) sudah tepat", "b) teknik salah", "c) terlalu cepat", "d) kurang awalan"],
+                key: 1, // b)
+                img: ""
+            },
+            {
+                q: "10. Zara melakukan rangkaian senam lantai. Ia melupakan satu gerakan di tengah rangkaian. Gerakan menjadi tidak rapi dan terputus. Evaluasi yang tepat adalah...",
+                options: ["a) urutan kurang tepat", "b) gerakan terlalu cepat", "c) gerakan terlalu lambat", "d) gerakan sudah sempurna"],
+                key: 0, // a)
+                img: ""
+            },
+            {
+                q: "11. Doni bermain sepak bola di lapangan. Ia menendang tanpa melihat arah. Bola sering tidak tepat sasaran. Penyebab utama adalah....",
+                options: ["a) terlalu cepat", "b) terlalu lambat", "c) kurang tenaga", "d) kurang ketepatan"],
+                key: 3, // d)
+                img: ""
+            },
+            {
+                q: "12. Rani bermain bulu tangkis di lapangan. Ia sering terlambat memukul bola. Posisi tubuh tidak siap menerima bola. Strategi terbaik yang dilakukan Rani adalah...",
+                options: ["a) meningkatkan footwork", "b) mengurangi pukulan", "c) berhenti bermain", "d) diam menunggu"],
+                key: 0, // a)
+                img: ""
+            },
+            {
+                q: "13. Rafi bermain futsal di lapangan. Ia tidak mencari ruang kosong. Ia hanya menunggu bola datang. Kesalahan Rafi adalah....",
+                options: ["a) terlalu banyak operan", "b) kurang aktif bergerak", "c) terlalu cepat bergerak", "d) terlalu kuat menendang"],
+                key: 1, // b)
+                img: ""
+            },
+            {
+                q: "14. Doni melakukan rangkaian senam lantai. Ia lupa satu gerakan di tengah. Gerakan terlihat terputus. Gerakan Doni berdampak....",
+                options: ["a) gerakan tidak rapi", "b) gerakan lebih cepat", "c) gerakan lebih kuat", "d) gerakan lebih ringan"],
+                key: 0, // a)
+                img: ""
+            },
+            {
+                q: "15. Dimas bermain futsal di lapangan sekolah. Ia selalu bergerak mencari ruang kosong. Temannya mudah memberikan operan kepadanya. Keuntungan utama gerakan Dimas adalah....",
+                options: ["a) mengurangi gerakan", "b) mengurangi kerja sama", "c) memperlambat permainan", "d) membuka peluang serangan"],
+                key: 3, // d)
+                img: ""
+            },
+            {
+                q: "16. Perhatikan gambar gerakan senam lantai berikut:\nLatihan gerakan tersebut bertujuan....",
+                options: ["a) mempercepat gerak", "b) mengurangi aktivitas", "c) melatih keseimbangan", "d) meningkatkan kekuatan"],
+                key: 2, // c)
+                img: "https://uploads.onecompiler.io/453dejs4x/1789603930539/WhatsApp%20Image%202026-09-14%20at%2010.49.36.jpeg"
+            },
+            {
+                q: "17. Tiara bermain bulu tangkis di lapangan. Ia tidak siap saat menerima bola. Ia sering kehilangan poin. Penyebab utama Tiara adalah.....",
+                options: ["a) terlalu kuat", "b) terlalu cepat", "c) terlalu lambat", "d) kurang kesiapan"],
+                key: 3, // d)
+                img: ""
+            },
+            {
+                q: "18. Tim basket sedang bermain di lapangan. Pemain tidak saling memberikan operan. Setiap pemain bermain sendiri. Kondisi tersebut berdampak....",
+                options: ["a) permainan tidak efektif", "b) kerja sama meningkat", "c) gerakan lebih cepat", "d) permainan efektif"],
+                key: 0, // a)
+                img: ""
+            },
+            {
+                q: "19. Perhatikan gambar tahapan senam lantai:\nKesalahan yang muncul jika urutan terbalik adalah....",
+                options: ["a) gerakan lebih kuat", "b) gerakan lebih cepat", "c) gerakan tidak efektif", "d) gerakan lebih ringan"],
+                key: 2, // c)
+                img: "https://uploads.onecompiler.io/453dejs4x/1789603943403/WhatsApp%20Image%202026-09-14%20at%2010.50.29.jpeg"
+            },
+            {
+                q: "20. Imron bermain bola tangan dengan teman-temannya. Imron selalu bergerak mencari tempat. Temannya selalu memberikan operan kepada Imron. Strategi Imron menunjukkan....",
+                options: ["a) strategi efektif", "b) gerakan lambat", "c) permainan acak", "d) permainan pasif"],
+                key: 0, // a)
+                img: ""
+            },
+            {
+                q: "21. Saat bermain futsal, Andi menggiring bola, menghindari lawan, lalu mengoper ke temannya, tetapi operannya sering tidak tepat sasaran. Analisis yang paling tepat terkait permasalahan tersebut adalah....",
+                options: [
+                    "a) Andi tidak memahami urutan gerakan",
+                    "b) Andi kurang melakukan kombinasi gerak",
+                    "c) Andi terlalu cepat dalam melakukan gerakan",
+                    "d) Andi kurang mengontrol dan mengoordinasikan gerakan"
+                ],
+                key: 3, // d)
+                img: ""
+            },
+            {
+                q: "22. Seorang pemain sepak bola mampu melakukan kontrol dan passing dengan baik saat latihan berpasangan. Namun, saat pertandingan ia sering salah mengoper karena pergerakan teman berubah-ubah. Masalah utama yang dialami pemain tersebut adalah....",
+                options: [
+                    "a) ketidakmampuan menyesuaikan keterampilan dengan perubahan situasi dan pergerakan pemain",
+                    "b) kurang konsisten dalam menerapkan teknik dasar pada berbagai kondisi permainan",
+                    "c) belum optimalnya penguasaan keterampilan dasar dalam situasi latihan terstruktur",
+                    "d) kesalahan dalam memilih jenis passing yang digunakan saat kondisi tertentu"
+                ],
+                key: 0, // a)
+                img: ""
+            },
+            {
+                q: "23. Perhatikan pernyataan berikut!\n1) Awalan dilakukan lambat.\n2) Tolakan kurang kuat.\n3) Posisi melayang tidak seimbang.\n4) Pendaratan dengan lutut ditekuk.\nKesalahan paling berpengaruh terhadap kegagalan lompat jauh ditunjukkan oleh angka...",
+                options: ["a) 1) dan 2)", "b) 1) dan 4)", "c) 2) dan 3)", "d) 3) dan 4)"],
+                key: 2, // c)
+                img: ""
+            },
+            {
+                q: "24. Risang melakukan handstand langsung diikuti guling depan, tetapi sering gagal dan jatuh. Penyebab paling logis adalah....",
+                options: [
+                    "a) urutan gerakan tidak penting",
+                    "b) tidak memahami kombinasi gerak",
+                    "c) kurangnya kekuatan otot tangan",
+                    "d) kurang menguasai rangkaian gerak secara bertahap"
+                ],
+                key: 3, // d)
+                img: ""
+            },
+            {
+                q: "25. Dalam permainan bentengan, seorang pemain berlari lurus tanpa mengubah arah sehingga mudah tertangkap lawan. Strategi gerak yang sebaiknya dilakukan pemain tersebut adalah....",
+                options: [
+                    "a) mengurangi kecepatan lari",
+                    "b) menggunakan kombinasi gerak adaptif",
+                    "c) menggunakan rangkaian gerak tetap",
+                    "d) menghindari semua gerakan tambahan"
+                ],
+                key: 1, // b)
+                img: ""
+            },
+            {
+                q: "26. Urutan gerakan dari ilustrasi lompat jauh yang tepat adalah....",
+                options: [
+                    "a) tolakan - awalan - melayang - mendarat",
+                    "b) awalan - tolakan - melayang - mendarat",
+                    "c) melayang - tolakan - awalan - mendarat",
+                    "d) mendarat - awalan - tolakan - melayang"
+                ],
+                key: 1, // b)
+                img: "https://uploads.onecompiler.io/453dejs4x/1789603963950/Screenshot%202026-09-14%2012.24.13%20PM.png"
+            },
+            {
+                q: "27. Dalam kegiatan senam irama di sekolah, Ani terlihat melakukan gerakan dengan teknik yang cukup baik, tetapi gerakannya tidak selaras dengan musik yang mengiringi. Hal ini membuat penampilannya terlihat kurang harmonis. Berdasarkan ilustrasi tersebut, kesalahan yang paling sering terjadi adalah....",
+                options: ["a) gerakan terlalu kuat", "b) tidak mengikuti irama", "c) terlalu banyak variasi gerak", "d) gerakan terlalu lambat saja"],
+                key: 1, // b)
+                img: ""
+            },
+            {
+                q: "28. Dalam permainan olahraga, seorang pemain tidak hanya dituntut menguasai teknik dasar, tetapi juga mampu menggunakan keterampilan tersebut saat menghadapi situasi nyata di lapangan. Berdasarkan situasi tersebut, tujuan utama penerapan gerak dalam permainan adalah....",
+                options: [
+                    "a) memperbanyak jenis gerakan",
+                    "b) menghafal teknik gerakan",
+                    "c) mempercepat semua gerakan",
+                    "d) menerapkan keterampilan gerak dalam situasi nyata"
+                ],
+                key: 3, // d)
+                img: ""
+            },
+            {
+                q: "29. Berdasarkan gambar posisi handstand ke guling berikut, kesalahan utama yang menyebabkan murid sulit mempertahankan posisi adalah....",
+                options: [
+                    "a) kurangnya variasi kombinasi gerak dalam melakukan handstand",
+                    "b) kesalahan dalam menyusun rangkaian gerak sebelum posisi akhir",
+                    "c) penggunaan tenaga berlebihan pada tangan saat mempertahankan posisi",
+                    "d) ketidaksesuaian antara pusat gravitasi tubuh dengan bidang tumpu saat posisi terbalik"
+                ],
+                key: 3, // d)
+                img: "https://uploads.onecompiler.io/453dejs4x/1789603989301/Screenshot%202026-09-14%2012.38.52%20PM.png"
+            },
+            {
+                q: "30. Dalam permainan bola basket, seorang pemain mampu melakukan dribble cepat saat latihan individu. Namun, saat pertandingan ia mudah kehilangan bola ketika dijaga lawan. Penyebab paling tepat adalah....",
+                options: [
+                    "a) ketidakmampuan menerapkan keterampilan dribble dalam situasi permainan yang sebenarnya",
+                    "b) kurangnya kemampuan mengontrol bola saat menghadapi variasi tekanan lawan",
+                    "c) kesalahan dalam mengombinasikan gerakan dribble dengan gerakan lain",
+                    "d) rendahnya kualitas latihan teknik dasar yang dilakukan sebelumnya"
+                ],
+                key: 1, // b)
+                img: ""
+            },
+            {
+                q: "31. Dalam permainan bola basket, seorang pemain mampu menggiring bola dengan cepat menuju ring. Namun, saat melakukan lay-up, bola sering tidak masuk meskipun posisi sudah dekat dengan ring. Penyebab paling tepat dari permasalahan tersebut adalah....",
+                options: [
+                    "a) ketidaktepatan timing antara langkah terakhir, lompatan, dan pelepasan bola",
+                    "b) penggunaan kombinasi gerak yang terlalu kompleks sebelum melakukan lay-up",
+                    "c) kurangnya kekuatan otot kaki saat melakukan tolakan ke arah ring",
+                    "d) kesalahan dalam memilih jenis gerakan menyerang saat mendekati ring"
+                ],
+                key: 0, // a)
+                img: ""
+            },
+            {
+                q: "32. Berdasarkan ilustrasi permainan basket berikut, keputusan yang menunjukkan kemampuan transfer keterampilan secara optimal adalah....",
+                options: [
+                    "a) mempertahankan penguasaan bola sambil mencari celah untuk melewati lawan",
+                    "b) melakukan operan cepat ke rekan yang bebas dengan mempertimbangkan peluang terbaik",
+                    "c) menunda keputusan untuk memastikan semua pemain berada pada posisi menyerang",
+                    "d) melakukan tembakan langsung untuk memanfaatkan kesempatan sebelum dijaga lebih ketat"
+                ],
+                key: 1, // b)
+                img: "https://uploads.onecompiler.io/453dejs4x/1789604015828/Screenshot%202026-09-14%2012.47.31%20PM.png"
+            },
+            {
+                q: "33. Seorang pemain voli mampu melakukan servis dengan baik saat latihan. Namun, saat pertandingan arah servis sering tidak terkontrol karena adanya tekanan dari lawan dan situasi pertandingan. Hal ini menunjukkan bahwa pemain tersebut....",
+                options: [
+                    "a) kurang memahami variasi teknik servis dalam permainan bola voli",
+                    "b) belum mampu mempertahankan konsistensi teknik dalam berbagai kondisi permainan",
+                    "c) mengalami kesulitan dalam mengintegrasikan teknik dengan kondisi psikologis saat bermain",
+                    "d) belum mampu mentransfer keterampilan ke dalam situasi permainan yang sesungguhnya"
+                ],
+                key: 3, // d)
+                img: ""
+            },
+            {
+                q: "34. Seorang pemain mampu melakukan shooting dengan baik saat latihan. Namun, saat pertandingan ia ragu-ragu dan sering gagal menembak. Hal ini menunjukkan bahwa pemain tersebut....",
+                options: [
+                    "a) belum mampu menjaga konsistensi teknik dalam berbagai kondisi permainan",
+                    "b) mengalami kesulitan dalam mengintegrasikan keterampilan dengan kondisi mental",
+                    "c) belum mampu menerapkan keterampilan dalam situasi permainan sebenarnya",
+                    "d) kurang memahami prinsip dasar dalam melakukan shooting"
+                ],
+                key: 2, // c)
+                img: ""
+            },
+            {
+                q: "35. Perhatikan tahapan menerapkan keterampilan ke situasi permainan berikut!\n1) Melakukan gerakan sesuai keputusan yang diambil.\n2) Menguasai teknik dasar yang diperlukan.\n3) Membaca situasi permainan (posisi lawan dan teman).\n4) Menentukan keputusan yang tepat.\nUrutan tahapan yang paling tepat ditunjukkan oleh angka....",
+                options: ["a) 2), 3), 4), 1)", "b) 2), 4), 3), 1)", "c) 3), 2), 4), 1)", "d) 3), 4), 2), 1)"],
+                key: 0, // a)
+                img: ""
+            },
+            {
+                q: "36. Bacalah teks berikut!\nDalam permainan bulu tangkis, seorang pemain mampu melakukan pukulan clear dan drop shot dengan baik saat latihan. Namun, saat pertandingan ia sering mengembalikan shuttlecock terlalu tinggi sehingga lawan mudah melakukan smes. Padahal, dalam beberapa situasi sebenarnya ia memiliki kesempatan untuk melakukan drop shot yang lebih efektif.\nMasalah utama yang dialami pemain tersebut adalah....",
+                options: [
+                    "a) kurangnya variasi teknik pukulan yang dikuasai dalam permainan",
+                    "b) kesalahan dalam melakukan teknik dasar pukulan clear dan drop shot",
+                    "c) rendahnya kemampuan mengontrol kekuatan pukulan saat pertandingan",
+                    "d) ketidakmampuan memilih jenis pukulan yang paling tepat sesuai situasi permainan"
+                ],
+                key: 1, // b)
+                img: ""
+            },
+            {
+                q: "37. Dalam permainan bola basket, pemain tanpa bola terus bergerak menjauhi area yang padat pemain. Tujuan utama dari gerakan tersebut adalah....",
+                options: [
+                    "a) menghindari pelanggaran dari lawan",
+                    "b) mempercepat tempo permainan tim",
+                    "c) menciptakan ruang agar peluang serangan lebih terbuka",
+                    "d) menghemat energi selama pertandingan berlangsung"
+                ],
+                key: 2, // c)
+                img: ""
+            },
+            {
+                q: "38. Seorang pemain tidak selalu menggunakan smes keras, tetapi sering mengombinasikannya dengan drop shot dan netting. Hal tersebut menunjukkan bahwa pemain....",
+                options: [
+                    "a) menghindari kelelahan selama permainan",
+                    "b) belum menguasai teknik smes secara maksimal",
+                    "c) menerapkan variasi serangan untuk menyulitkan lawan",
+                    "d) lebih fokus pada permainan bertahan daripada menyerang"
+                ],
+                key: 2, // c)
+                img: ""
+            },
+            {
+                q: "39. Dalam sebuah tim bola voli, pemain tidak hanya fokus pada serangan, tetapi juga aktif melakukan blok dan cover terhadap rekan. Hal ini menunjukkan bahwa pemain memahami....",
+                options: [
+                    "a) pentingnya menguasai teknik individu secara mandiri",
+                    "b) peran kerja sama dalam menjaga keseimbangan tim",
+                    "c) strategi menyerang lebih penting daripada bertahan",
+                    "d) bahwa setiap pemain harus memiliki tugas yang sama"
+                ],
+                key: 1, // b)
+                img: ""
+            },
+            {
+                q: "40. Dalam kegiatan bola basket, seorang pemain yang telah mempelajari teknik dasar seperti dribbling, passing, dan shooting mampu menggunakannya secara tepat saat menghadapi situasi nyata di lapangan. Kemampuan menerapkan keterampilan ke situasi nyata disebut....",
+                options: ["a) variasi teknik", "b) adaptasi gerak", "c) koordinasi gerak", "d) transfer keterampilan"],
+                key: 3, // d)
+                img: ""
+            },
+            {
+                q: "41. Perhatikan tahapan proses transfer keterampilan ke dalam permainan berikut!\n1) Mengevaluasi hasil gerakan yang telah dilakukan.\n2) Mengambil keputusan berdasarkan situasi permainan.\n3) Mengamati dan menganalisis kondisi permainan.\n4) Melaksanakan keterampilan yang telah dipilih.\nUrutan tahapan yang paling tepat ditunjukkan oleh angka....",
+                options: ["a) 2), 3), 4), 1)", "b) 2), 4), 3), 1)", "c) 3), 2), 4), 1)", "d) 3), 4), 2), 1)"],
+                key: 2, // c)
+                img: ""
+            },
+            {
+                q: "42. Dalam pertandingan bola basket, Dimas melihat waktu tersisa sedikit dan timnya tertinggal dua poin. Ia berada di posisi cukup jauh dari ring, tetapi temannya berada lebih dekat dan tidak dijaga. Keputusan taktis yang paling tepat adalah....",
+                options: [
+                    "a) menahan bola agar waktu habis",
+                    "b) menggiring bola menjauh dari ring",
+                    "c) mencoba menembak dari jarak jauh",
+                    "d) mengoper bola ke teman yang lebih dekat"
+                ],
+                key: 3, // d)
+                img: ""
+            },
+            {
+                q: "43. Dalam sebuah pertandingan, tim B terus menggunakan strategi menyerang melalui sisi kanan, tetapi selalu gagal karena pertahanan lawan kuat. Langkah penyempurnaan strategi yang tepat adalah....",
+                options: [
+                    "a) menghentikan permainan",
+                    "b) mengubah arah serangan ke sisi lain",
+                    "c) menunggu lawan melakukan kesalahan",
+                    "d) menggunakan strategi yang sama"
+                ],
+                key: 1, // b)
+                img: ""
+            },
+            {
+                q: "44. Perhatikan posisi pemain nomor 9 berikut:\nTindakan yang paling tepat dilakukan pemain nomor 9 adalah....",
+                options: [
+                    "a) mengalihkan arah serangan ke sisi lapangan",
+                    "b) menyerang melalui tengah",
+                    "c) menghentikan permainan",
+                    "d) menendang bola keluar"
+                ],
+                key: 0, // a)
+                img: "https://uploads.onecompiler.io/453dejs4x/1789604031902/Screenshot%202026-09-14%201.18.54%20PM.png"
+            },
+            {
+                q: "45. Seorang pelatih melihat timnya sering kehilangan bola karena kurang komunikasi. Perbaikan strategi yang paling tepat adalah....",
+                options: [
+                    "a) mengurangi jumlah pemain",
+                    "b) mempercepat tempo permainan",
+                    "c) meningkatkan kekuatan fisik pemain",
+                    "d) meningkatkan komunikasi dan koordinasi tim"
+                ],
+                key: 3, // d)
+                img: ""
+            },
+            {
+                q: "46. Dalam sebuah permainan, tim sering kehilangan bola karena antar anggota tidak saling memberi informasi posisi. Solusi yang paling tepat adalah....",
+                options: [
+                    "a) mengurangi jumlah pemain",
+                    "b) memperbanyak latihan individu",
+                    "c) meningkatkan kecepatan bermain",
+                    "d) meningkatkan komunikasi antaranggota tim"
+                ],
+                key: 3, // d)
+                img: ""
+            },
+            {
+                q: "47. Tim berada dalam tekanan lawan dan sulit keluar dari pertahanan. Keputusan taktis yang tepat adalah....",
+                options: [
+                    "a) memaksakan serangan",
+                    "b) mempercepat tanpa arah",
+                    "c) mengabaikan posisi teman",
+                    "d) mengamankan permainan terlebih dahulu"
+                ],
+                key: 3, // d)
+                img: ""
+            },
+            {
+                q: "48. Perhatikan pernyataan berikut!\n1) Kecepatan pemain\n2) Kelemahan lawan\n3) Cuaca\n4) Kerja sama tim\nFaktor yang mempengaruhi analisis permainan adalah....",
+                options: ["a) 1), 2), dan 3)", "b) 1), 2), dan 4)", "c) 1), 3), dan 4)", "d) 2), 3), dan 4)"],
+                key: 1, // b)
+                img: ""
+            },
+            {
+                q: "49. Seorang pemain langsung menembak tanpa melihat posisi teman yang lebih bebas. Kesalahan yang terjadi adalah....",
+                options: ["a) kurang pemahaman situasi", "b) terlalu banyak bergerak", "c) terlalu cepat berlari", "d) kurang teknik"],
+                key: 0, // a)
+                img: ""
+            },
+            {
+                q: "50. Rian melihat strategi timnya tidak berhasil karena lawan sudah memahami pola serangan yang dilakukan. Rian kemudian mengusulkan perubahan pola permainan kepada timnya. Tindakan Rian menunjukkan....",
+                options: [
+                    "a) adaptasi gerak",
+                    "b) kerja sama tim",
+                    "c) teknik dasar permainan",
+                    "d) evaluasi dan penyempurnaan strategi"
+                ],
+                key: 3, // d)
+                img: ""
+            }
+        ];
+
+        document.getElementById('formStart').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nama = document.getElementById('inputNama').value.trim();
+            const kelas = document.getElementById('selectKelas').value;
+            const passcode = document.getElementById('inputPasscode').value.trim();
+            const url = document.getElementById('inputGasUrl').value.trim();
+
+            if (passcode.toUpperCase() !== DEFAULT_PASSCODE) {
+                alert("Passcode salah! Silakan tanyakan passcode yang benar kepada guru PJOK Anda.");
+                return;
+            }
+
+            studentData.nama = nama;
+            studentData.kelas = kelas;
+            studentData.passcode = passcode;
+            gasWebUrl = url;
+
+            // Start Quiz
+            document.getElementById('screenEntry').classList.add('hidden');
+            document.getElementById('screenQuiz').classList.remove('hidden');
+            document.getElementById('quizHeaderInfo').classList.remove('hidden');
+            document.getElementById('studentTag').textContent = `Siswa: ${nama} (${kelas})`;
+
+            startTimer();
+            initAntiCheat();
+            renderQuestion(0);
+        });
+
+        function toggleScriptConfig() {
+            const area = document.getElementById('scriptConfigArea');
+            area.classList.toggle('hidden');
+        }
+
+        /* TIMER LOGIC */
+        function startTimer() {
+            const display = document.getElementById('timerDisplay');
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                let m = Math.floor(timeLeft / 60);
+                let s = timeLeft % 60;
+                display.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Waktu pengerjaan telah habis! Sistem akan mengumpulkan jawaban Anda otomatis.");
+                    finishQuiz();
+                }
+            }, 1000);
+        }
+
+        function initAntiCheat() {
+            // Tab switch / Blur detection
+            window.addEventListener('blur', handleCheatViolation);
+            
+            // Disable copy, paste, cut
+            document.addEventListener('copy', (e) => e.preventDefault());
+            document.addEventListener('cut', (e) => e.preventDefault());
+            document.addEventListener('paste', (e) => e.preventDefault());
+        }
+
+        function handleCheatViolation() {
+            if (document.getElementById('screenQuiz').classList.contains('hidden')) return;
+
+            violationsCount++;
+            document.getElementById('cheatCount').textContent = violationsCount;
+
+            if (violationsCount >= maxViolations) {
+                alert(`PERINGATAN KECURANGAN: Anda telah meninggalkan area ujian sebanyak ${violationsCount} kali. Quiz diselesaikan secara otomatis oleh sistem!`);
+                finishQuiz();
+            } else {
+                alert(`PERINGATAN (${violationsCount}/${maxViolations}): Dilarang berpindah tab/layar selama ujian berlangsung!`);
+            }
+        }
+
+        function renderQuestion(index) {
+            currentQuestionIndex = index;
+            const data = questionsData[index];
+
+            document.getElementById('questionBadge').textContent = index + 1;
+            document.getElementById('questionProgressText').textContent = `Soal ${index + 1} dari ${questionsData.length}`;
+            document.getElementById('questionText').textContent = data.q;
+
+            // Handle Image Area
+            const imgArea = document.getElementById('questionImageArea');
+            const imgElem = document.getElementById('questionImg');
+            if (data.img && data.img.trim() !== "") {
+                imgElem.src = data.img;
+                imgArea.classList.remove('hidden');
+            } else {
+                imgArea.classList.add('hidden');
+                imgElem.src = "";
+            }
+
+            // Options Rendering
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = "";
+
+            data.options.forEach((optText, optIdx) => {
+                const isSelected = userAnswers[index] === optIdx;
+                const optBtn = document.createElement('button');
+                optBtn.className = `w-full text-left p-4 rounded-2xl border-2 transition flex items-center justify-between font-medium text-sm sm:text-base ${
+                    isSelected 
+                    ? 'border-blue-600 bg-blue-50/80 text-blue-900 font-bold shadow-sm' 
+                    : 'border-slate-200 bg-white hover:border-slate-300 text-slate-700'
+                }`;
+
+                optBtn.onclick = () => selectOption(optIdx);
+
+                optBtn.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span class="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs ${
+                            isSelected ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'
+                        }">
+                            ${String.fromCharCode(65 + optIdx)}
+                        </span>
+                        <span>${optText.replace(/^[a-d]\)\s*/, '')}</span>
+                    </div>
+                    ${isSelected ? '<i class="fa-solid fa-circle-check text-blue-600 text-lg"></i>' : ''}
+                `;
+
+                optionsContainer.appendChild(optBtn);
+            });
+
+            // Update Flag UI Button
+            updateFlagBtn();
+
+            // Update Navigation Buttons State
+            document.getElementById('btnPrev').disabled = (index === 0);
+            
+            if (index === questionsData.length - 1) {
+                document.getElementById('btnNext').classList.add('hidden');
+                document.getElementById('btnSubmitQuiz').classList.remove('hidden');
+            } else {
+                document.getElementById('btnNext').classList.remove('hidden');
+                document.getElementById('btnSubmitQuiz').classList.add('hidden');
+            }
+        }
+
+        function selectOption(optIdx) {
+            userAnswers[currentQuestionIndex] = optIdx;
+            renderQuestion(currentQuestionIndex);
+        }
+
+        function navigateQuestion(direction) {
+            const target = currentQuestionIndex + direction;
+            if (target >= 0 && target < questionsData.length) {
+                renderQuestion(target);
+            }
+        }
+
+        function toggleFlagCurrentQuestion() {
+            flaggedQuestions[currentQuestionIndex] = !flaggedQuestions[currentQuestionIndex];
+            updateFlagBtn();
+        }
+
+        function updateFlagBtn() {
+            const isFlagged = flaggedQuestions[currentQuestionIndex];
+            const icon = document.getElementById('flagIcon');
+            const text = document.getElementById('flagText');
+
+            if (isFlagged) {
+                icon.className = "fa-solid fa-bookmark text-amber-500";
+                text.textContent = "Ditandai Ragu";
+            } else {
+                icon.className = "fa-regular fa-bookmark";
+                text.textContent = "Tandai Ragu";
+            }
+        }
+
+        function handleImageError(imgObj) {
+            imgObj.parentElement.classList.add('hidden');
+        }
+
+        function toggleMapModal() {
+            const modal = document.getElementById('modalMap');
+            modal.classList.toggle('hidden');
+
+            if (!modal.classList.contains('hidden')) {
+                renderMapGrid();
+            }
+        }
+
+        function renderMapGrid() {
+            const grid = document.getElementById('gridQuestionMap');
+            grid.innerHTML = "";
+
+            questionsData.forEach((_, idx) => {
+                const isAnswered = userAnswers[idx] !== null;
+                const isFlagged = flaggedQuestions[idx];
+                const isCurrent = currentQuestionIndex === idx;
+
+                let colorClass = "bg-slate-100 text-slate-700 border-slate-200";
+                if (isFlagged) {
+                    colorClass = "bg-amber-400 text-white font-bold border-amber-500";
+                } else if (isAnswered) {
+                    colorClass = "bg-blue-600 text-white font-bold border-blue-700";
+                }
+
+                if (isCurrent) {
+                    colorClass += " ring-4 ring-indigo-300 scale-105";
+                }
+
+                const btn = document.createElement('button');
+                btn.className = `h-10 rounded-xl text-xs flex items-center justify-center border transition transform active:scale-95 ${colorClass}`;
+                btn.textContent = idx + 1;
+                btn.onclick = () => {
+                    renderQuestion(idx);
+                    toggleMapModal();
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        /* TEACHER IMAGE URL SETUP */
+        function toggleTeacherImageModal() {
+            const modal = document.getElementById('modalTeacherImage');
+            modal.classList.toggle('hidden');
+
+            if (!modal.classList.contains('hidden')) {
+                document.getElementById('currentImgSoalNum').textContent = currentQuestionIndex + 1;
+                document.getElementById('inputCustomImgUrl').value = questionsData[currentQuestionIndex].img || "";
+            }
+        }
+
+        function saveCurrentImageUrl() {
+            const newUrl = document.getElementById('inputCustomImgUrl').value.trim();
+            questionsData[currentQuestionIndex].img = newUrl;
+            toggleTeacherImageModal();
+            renderQuestion(currentQuestionIndex);
+        }
+
+        function clearCurrentImageUrl() {
+            questionsData[currentQuestionIndex].img = "";
+            document.getElementById('inputCustomImgUrl').value = "";
+            toggleTeacherImageModal();
+            renderQuestion(currentQuestionIndex);
+        }
+
+        function confirmFinishQuiz() {
+            const unanswered = userAnswers.filter(a => a === null).length;
+            let msg = "Apakah Anda yakin ingin menyelesaikan dan mengirimkan asesmen ini?";
+            if (unanswered > 0) {
+                msg = `Masih ada ${unanswered} soal yang belum dijawab! ` + msg;
+            }
+
+            if (confirm(msg)) {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            clearInterval(timerInterval);
+            window.removeEventListener('blur', handleCheatViolation);
+
+            // Calculate Score
+            let correct = 0;
+            userAnswers.forEach((ans, idx) => {
+                if (ans === questionsData[idx].key) {
+                    correct++;
+                }
+            });
+
+            let wrong = questionsData.length - correct;
+            let score = Math.round((correct / questionsData.length) * 100);
+
+            studentData.correctCount = correct;
+            studentData.wrongCount = wrong;
+            studentData.score = score;
+
+            // Render Results Screen
+            document.getElementById('screenQuiz').classList.add('hidden');
+            document.getElementById('screenResult').classList.remove('hidden');
+            document.getElementById('quizHeaderInfo').classList.add('hidden');
+
+            document.getElementById('resNama').textContent = studentData.nama;
+            document.getElementById('resKelas').textContent = studentData.kelas;
+            document.getElementById('resSkor').textContent = score;
+            document.getElementById('resBenar').textContent = correct;
+            document.getElementById('resSalah').textContent = wrong;
+
+            // Trigger Confetti
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+
+            // Post to Google Apps Script if URL provided
+            if (gasWebUrl && gasWebUrl.trim() !== "") {
+                sendDataToGoogleSheet();
+            }
+        }
+
+        function sendDataToGoogleSheet() {
+            const statusBox = document.getElementById('gasStatusAlert');
+            statusBox.classList.remove('hidden');
+            statusBox.className = "p-4 rounded-2xl text-xs font-bold text-center mb-6 bg-blue-50 text-blue-700 border border-blue-200";
+            statusBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Mengirimkan hasil skor ke Google Sheets...';
+
+            const payload = {
+                timestamp: new Date().toISOString(),
+                nama: studentData.nama,
+                kelas: studentData.kelas,
+                salah: studentData.wrongCount,
+                benar: studentData.correctCount,
+                skor: studentData.score
+            };
+
+            fetch(gasWebUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                statusBox.className = "p-4 rounded-2xl text-xs font-bold text-center mb-6 bg-emerald-50 text-emerald-700 border border-emerald-200";
+                statusBox.innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i> Skor berhasil dicatat di Google Sheets Guru!';
+            }).catch(err => {
+                statusBox.className = "p-4 rounded-2xl text-xs font-bold text-center mb-6 bg-rose-50 text-rose-700 border border-rose-200";
+                statusBox.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-2"></i> Gagal terhubung ke Google Sheets. Periksa Web App URL.';
+            });
+        }
+
+        /* REVIEW MODAL LOGIC */
+        function toggleReviewModal() {
+            const modal = document.getElementById('modalReview');
+            modal.classList.toggle('hidden');
+
+            if (!modal.classList.contains('hidden')) {
+                renderReviewContent();
+            }
+        }
+
+        function renderReviewContent() {
+            const container = document.getElementById('reviewContainer');
+            container.innerHTML = "";
+
+            questionsData.forEach((qObj, idx) => {
+                const userAnsIdx = userAnswers[idx];
+                const isCorrect = userAnsIdx === qObj.key;
+
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-2xl border text-xs sm:text-sm space-y-2 ${
+                    isCorrect ? 'bg-emerald-50/60 border-emerald-200' : 'bg-rose-50/60 border-rose-200'
+                }`;
+
+                let ansText = userAnsIdx !== null ? qObj.options[userAnsIdx] : "Tidak dijawab";
+                let keyText = qObj.options[qObj.key];
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-2">
+                        <p class="font-bold text-slate-800">${qObj.q}</p>
+                        <span class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase shrink-0 ${
+                            isCorrect ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'
+                        }">
+                            ${isCorrect ? 'BENAR' : 'SALAH'}
+                        </span>
+                    </div>
+                    <div class="pt-1 space-y-1">
+                        <p class="text-slate-600"><span class="font-bold">Jawaban Anda:</span> <span class="${isCorrect ? 'text-emerald-700 font-bold' : 'text-rose-700 font-bold'}">${ansText}</span></p>
+                        <p class="text-slate-600"><span class="font-bold">Kunci Jawaban:</span> <span class="text-blue-700 font-bold">${keyText}</span></p>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function restartApp() {
+            if (confirm("Kembali ke halaman awal game?")) {
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
